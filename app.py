@@ -117,7 +117,7 @@ HTML_TEMPLATE = """
         }
         .storage-stat {
             color: #3fb950 !important;
-            font-size: 3rem !important;
+            font-size: 1.0rem !important;
             font-weight: 800 !important;
             line-height: 1.1;
             display: block;
