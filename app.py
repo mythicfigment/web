@@ -6,6 +6,11 @@ import shutil
 
 app = Flask(__name__)
 
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return response
+
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="en">
@@ -103,9 +108,21 @@ HTML_TEMPLATE = """
             color: #58a6ff;
             word-break: break-all;
         }
+        .storage-card {
+            grid-column: span 2;
+            text-align: center;
+            padding: 20px 16px !important;
+            background: linear-gradient(180deg, rgba(35, 134, 54, 0.12) 0%, #0d1117 100%);
+            border: 1px solid rgba(35, 134, 54, 0.45);
+        }
         .storage-stat {
             color: #3fb950 !important;
-            font-size: 1.5rem !important;
+            font-size: 3rem !important;
+            font-weight: 800 !important;
+            line-height: 1.1;
+            display: block;
+            margin-top: 6px;
+            letter-spacing: -0.5px;
         }
     </style>
 </head>
@@ -120,7 +137,7 @@ HTML_TEMPLATE = """
         </a>
 
         <div class="info-grid">
-            <div class="info-item">
+            <div class="info-item storage-card">
                 <span>Free Cloud Storage</span>
                 <strong class="storage-stat">{{ free_storage }} Free</strong>
             </div>
@@ -140,7 +157,7 @@ HTML_TEMPLATE = """
                 <span>Network Tunnel</span>
                 <strong>Cloudflare Edge</strong>
             </div>
-            <div class="info-item">
+            <div class="info-item" style="grid-column: span 2;">
                 <span>Server Time</span>
                 <strong>{{ server_time }}</strong>
             </div>
@@ -164,3 +181,4 @@ def index():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
