@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiNGJhNjk1MGRhZDU5NDg5Njk1MWQyN2FkOGM3MGRmZGYiLCJ0IjoiNDc0NDM0MWQtYmUxYy00OGU0LWE5MzgtMWYzYTZhMGZiYzZiIiwicyI6Ik1qSTBNVEl5WWprdE5UYzNNaTAwWlRjeExXSTRObVl0TWpFNE16WTRaak0yT0dObSJ9
+    depends_on:
+      - web
