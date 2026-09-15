@@ -3,13 +3,13 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - \ 5000:5000\
+      - "5000:5000"
 
   filebrowser:
     image: filebrowser/filebrowser:latest
     restart: unless-stopped
     ports:
-      - \8080:80\
+      - "8080:80"
     volumes:
       - /home/mythic/cloud-storage:/srv
       - /home/mythic/filebrowser/filebrowser.db:/database/filebrowser.db
