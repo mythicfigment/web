@@ -105,7 +105,7 @@ HTML_TEMPLATE = """
         }
         .storage-stat {
             color: #3fb950 !important;
-            font-size: 1.1rem !important;
+            font-size: 1.5rem !important;
         }
     </style>
 </head>
@@ -115,7 +115,7 @@ HTML_TEMPLATE = """
         <h1>Personal Cloud Storage</h1>
         <p>Your headless Linux server is online, secure, and ready for file management and remote access.</p>
         
-        <a href="http://laptop:8080" target="_blank" class="btn-storage">
+        <a href="http://192.168.1.226:8080" target="_blank" class="btn-storage">
             📁 Open File Manager
         </a>
 
