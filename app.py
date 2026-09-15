@@ -2,6 +2,7 @@ from flask import Flask, render_template_string
 import os
 import platform
 import datetime
+import shutil
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ HTML_TEMPLATE = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudflare Tunnel &bull; Flask Server</title>
+    <title>Cloud Server &bull; Personal Storage</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -27,11 +28,11 @@ HTML_TEMPLATE = """
         .card {
             background-color: #161b22;
             border: 1px solid #30363d;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 40px;
-            max-width: 600px;
+            max-width: 640px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.6);
             text-align: center;
         }
         .badge {
@@ -46,7 +47,7 @@ HTML_TEMPLATE = """
             letter-spacing: 0.5px;
         }
         h1 {
-            font-size: 2rem;
+            font-size: 2.1rem;
             color: #f0f6fc;
             margin-bottom: 12px;
         }
@@ -55,18 +56,37 @@ HTML_TEMPLATE = """
             line-height: 1.6;
             margin-bottom: 25px;
         }
+        .btn-storage {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #1f6feb, #238636);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(31, 111, 235, 0.4);
+            margin-bottom: 30px;
+        }
+        .btn-storage:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(31, 111, 235, 0.6);
+            opacity: 0.95;
+        }
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 14px;
             text-align: left;
-            margin-top: 25px;
             border-top: 1px solid #21262d;
             padding-top: 25px;
         }
         .info-item {
             background: #0d1117;
-            padding: 12px 16px;
+            padding: 14px 16px;
             border-radius: 8px;
             border: 1px solid #30363d;
         }
@@ -76,21 +96,38 @@ HTML_TEMPLATE = """
             text-transform: uppercase;
             display: block;
             margin-bottom: 4px;
+            letter-spacing: 0.5px;
         }
         .info-item strong {
             font-size: 0.95rem;
             color: #58a6ff;
             word-break: break-all;
         }
+        .storage-stat {
+            color: #3fb950 !important;
+            font-size: 1.1rem !important;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <div class="badge">&#x25CF; SYSTEM OPERATIONAL</div>
-        <h1>Flask &times; Cloudflare Tunnel</h1>
-        <p>Your headless Linux server is live and routing traffic securely through Cloudflare without open router ports.</p>
+        <div class="badge">&#x25CF; CLOUD SERVER ACTIVE</div>
+        <h1>Personal Cloud Storage</h1>
+        <p>Your headless Linux server is online, secure, and ready for file management and remote access.</p>
         
+        <a href="http://laptop:8080" target="_blank" class="btn-storage">
+            📁 Open File Manager
+        </a>
+
         <div class="info-grid">
+            <div class="info-item">
+                <span>Free Cloud Storage</span>
+                <strong class="storage-stat">{{ free_storage }} Free</strong>
+            </div>
+            <div class="info-item">
+                <span>File Manager Port</span>
+                <strong>8080 (FileBrowser)</strong>
+            </div>
             <div class="info-item">
                 <span>Hostname</span>
                 <strong>{{ hostname }}</strong>
@@ -100,8 +137,8 @@ HTML_TEMPLATE = """
                 <strong>{{ arch }}</strong>
             </div>
             <div class="info-item">
-                <span>Environment</span>
-                <strong>Docker &amp; Gunicorn</strong>
+                <span>Network Tunnel</span>
+                <strong>Cloudflare Edge</strong>
             </div>
             <div class="info-item">
                 <span>Server Time</span>
@@ -115,10 +152,13 @@ HTML_TEMPLATE = """
 
 @app.route('/')
 def index():
+    total, used, free = shutil.disk_usage("/")
+    free_gb = f"{free // (1024**3)} GB"
     return render_template_string(
         HTML_TEMPLATE,
         hostname=os.uname().nodename,
         arch=platform.machine(),
+        free_storage=free_gb,
         server_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
     )
 

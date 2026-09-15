@@ -5,9 +5,19 @@ services:
     ports:
       - "5000:5000"
 
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - /home/mythic/cloud-storage:/srv
+      - /home/mythic/filebrowser/filebrowser.db:/database/filebrowser.db
+
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiNGJhNjk1MGRhZDU5NDg5Njk1MWQyN2FkOGM3MGRmZGYiLCJ0IjoiNDc0NDM0MWQtYmUxYy00OGU0LWE5MzgtMWYzYTZhMGZiYzZiIiwicyI6Ik1qSTBNVEl5WWprdE5UYzNNaTAwWlRjeExXSTRObVl0TWpFNE16WTRaak0yT0dObSJ9
     depends_on:
       - web
+      - filebrowser
